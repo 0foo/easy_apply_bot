@@ -1,0 +1,104 @@
+{
+  "id": "73b4deb8-5053-4481-8a40-a840250e0df3",
+  "version": "2.0",
+  "name": "easy_apply_selenium",
+  "url": "https://linkedin.com/home",
+  "tests": [{
+    "id": "8e315eba-d57a-4ff6-abf4-28af52414880",
+    "name": "login",
+    "commands": [{
+      "id": "f8c7e83b-3ef6-4c13-9a4b-fb7b684e59b3",
+      "comment": "",
+      "command": "open",
+      "target": "https://www.linkedin.com/home",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "56fbbd22-8dd8-42f0-8332-24ccc0977705",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1850x1173",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "30ddbb55-aade-4872-989c-3c491fc1b0c3",
+      "comment": "",
+      "command": "click",
+      "target": "id=session_key",
+      "targets": [
+        ["id=session_key", "id"],
+        ["name=session_key", "name"],
+        ["css=#session_key", "css:finder"],
+        ["xpath=//input[@id='session_key']", "xpath:attributes"],
+        ["xpath=//main[@id='main-content']/section/div/div/form/div/div/div/div/input", "xpath:idRelative"],
+        ["xpath=//div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "5e6cd2cd-698e-46c0-8d3f-d3e1b2b8a72a",
+      "comment": "",
+      "command": "type",
+      "target": "id=session_key",
+      "targets": [
+        ["id=session_key", "id"],
+        ["name=session_key", "name"],
+        ["css=#session_key", "css:finder"],
+        ["xpath=//input[@id='session_key']", "xpath:attributes"],
+        ["xpath=//main[@id='main-content']/section/div/div/form/div/div/div/div/input", "xpath:idRelative"],
+        ["xpath=//div/input", "xpath:position"]
+      ],
+      "value": "nickkiermaier@gmail.com"
+    }, {
+      "id": "9dd6c024-804f-4b0c-9520-6c8a9619f1cf",
+      "comment": "",
+      "command": "click",
+      "target": "id=session_password",
+      "targets": [
+        ["id=session_password", "id"],
+        ["name=session_password", "name"],
+        ["css=#session_password", "css:finder"],
+        ["xpath=//input[@id='session_password']", "xpath:attributes"],
+        ["xpath=//main[@id='main-content']/section/div/div/form/div/div[2]/div/div/input", "xpath:idRelative"],
+        ["xpath=//div[2]/div/div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "7fd2b4d0-572d-40c3-abc1-6f6bb609b057",
+      "comment": "",
+      "command": "type",
+      "target": "id=session_password",
+      "targets": [
+        ["id=session_password", "id"],
+        ["name=session_password", "name"],
+        ["css=#session_password", "css:finder"],
+        ["xpath=//input[@id='session_password']", "xpath:attributes"],
+        ["xpath=//main[@id='main-content']/section/div/div/form/div/div[2]/div/div/input", "xpath:idRelative"],
+        ["xpath=//div[2]/div/div/input", "xpath:position"]
+      ],
+      "value": "Dudebrah01!"
+    }, {
+      "id": "a0e4752c-91eb-4624-b156-ae760f46cde1",
+      "comment": "",
+      "command": "click",
+      "target": "css=.sign-in-form__submit-btn--full-width",
+      "targets": [
+        ["css=.sign-in-form__submit-btn--full-width", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//main[@id='main-content']/section/div/div/form/div[2]/button", "xpath:idRelative"],
+        ["xpath=//div[2]/button", "xpath:position"],
+        ["xpath=//button[contains(.,'Sign in')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "a0e98299-4c67-466a-b317-6d3f3753502c",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": []
+  }],
+  "urls": ["https://linkedin.com/", "https://linkedin.com/home"],
+  "plugins": []
+}

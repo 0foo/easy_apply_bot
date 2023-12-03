@@ -1,0 +1,2 @@
+webdriver-manager
+git+https://github.com/0foo/nick_py_utils.git#egg=nick_py_utils
