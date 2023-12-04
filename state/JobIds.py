@@ -1,4 +1,4 @@
-from Connection import Connection
+from .Connection import Connection
 
 class JobIds:
     
@@ -36,10 +36,10 @@ class JobIds:
         self.con.execute(f"DELETE FROM JobIds WHERE job_id = {job_id};")
 
     def total(self):
-        return self.con.get_row_count(self.easy_db, "JobIds")
+        return self.con.row_count("JobIds")
     
     def exists(self, job_id, search_term):
-        return self.con.item_exists("SELECT COUNT(*) FROM JobIds WHERE job_id = ? AND search_term = ?", (job_id, search_term))
+        return self.con.item_exists(f"SELECT COUNT(*) FROM JobIds WHERE job_id='{job_id}' AND search_term='{search_term}'")
    
     def get_by_keyword(self, keyword):
         job_ids = self.con.fetch_col_as_list(0, f"SELECT job_id FROM JobIds WHERE search_term LIKE ('%{keyword}%')")
