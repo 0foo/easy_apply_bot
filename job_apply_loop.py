@@ -1,3 +1,5 @@
+keyword="linux"
+
 import sys
 sys.path.append('./state')
 sys.path.append('./classes')
@@ -30,7 +32,7 @@ applied_ids = AppliedIds()
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 login(driver)
 
-keyword="linux"
+
 
 for job_id in job_ids.get_by_keyword(keyword):
     

@@ -18,10 +18,13 @@ def find_by_button_aria_label_attribute(driver, aria_label):
         return False
 def uncheck_follow_company(driver):
     # Find the checkbox by its id
-    checkbox = driver.find_element(By.ID, "follow-company-checkbox")
-    # Check if the checkbox is selected and click to uncheck it
-    if checkbox.is_selected():
-        driver.execute_script("arguments[0].click();", checkbox)
+    try:
+        checkbox = driver.find_element(By.ID, "follow-company-checkbox")
+        # Check if the checkbox is selected and click to uncheck it
+        if checkbox.is_selected():
+            driver.execute_script("arguments[0].click();", checkbox)
+    except:
+        return False
 
 def submit_button_present(driver):
     if find_by_button_aria_label_attribute(driver, "Submit application"):
