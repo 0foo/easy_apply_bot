@@ -47,6 +47,6 @@ class Requests:
         if self.proxies:
             return requests.get(page_url, headers=headers, proxies=self.proxies)
         else:
-            return equests.get(page_url, headers=headers)
+            return requests.get(page_url, headers=headers)
 
         
