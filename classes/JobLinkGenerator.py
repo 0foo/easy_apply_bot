@@ -1,5 +1,5 @@
 from urllib.parse import quote
-import Config
+from Config import Config
 
 class JobLinkGenerator:
  
