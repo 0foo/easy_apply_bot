@@ -3,15 +3,6 @@ Searches a linkedin site for jobids matching a keyword(s).
 Input your keyword(s) into keyword variable and run this: python3 gather_job_ids.py.
 """
 
-
-headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36'
-}
-
-proxies = {
-    "http": "http://10.10.1.10:3128"
-}
-
 import sys
 import pdb
 import requests
@@ -39,7 +30,6 @@ config_file="./config.json"
 config = get_config(config_file)
 required=config["required"].split(",")
 ignored=config["ignored"].split(",")
-keyword=config["keyword"]
 
 required=required.split(",")
 ignored=ignored.split(",")
@@ -51,8 +41,7 @@ wait_for(driver, By.XPATH, '//*[@aria-label="Primary Navigation"]')
 print("Found Primary Nav bar, continuing")
 
 metrics = Metrics()
-job_link_generator = JobLinkGenerator()
-job_link_generator.keywords = keyword
+job_link_generator = JobLinkGenerator(config)
 job_id_state = JobIds()
 applied_ids = AppliedIds()
 deleted_ids = DeletedIds()

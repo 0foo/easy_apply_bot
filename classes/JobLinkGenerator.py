@@ -7,6 +7,15 @@ class JobLinkGenerator:
     time_frame_seconds=604800 # one week
     page_number=1
 
+    def __init__(self, config={}):
+        if "location" in config and config["location"]:
+            self.location = config["location"]
+        if "keywords" in config and config["keywords"]:
+            self.keywords = config["keywords"]
+        if "time_frame_seconds" in config and config["time_frame_seconds"]:
+            self.time_frame_seconds = config["time_frame_seconds"]
+        
+
     def get_link(self):
         base = "https://www.linkedin.com/jobs/search/"
         easy_apply=f"f_AL={quote(self.easy_apply_bool)}"
