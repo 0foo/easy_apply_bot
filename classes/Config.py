@@ -17,7 +17,7 @@ class Config:
         self.easy_apply_bool: str = "true"
 
         config_file: str = "./config.json"
-        config: str = self.get_config(self, config_file)
+        config: str = self.get_config(config_file)
         
         if "required" in config:
             self.required =  config["required"].split(",")
