@@ -6,6 +6,7 @@ class JobLinkGenerator:
     def __init__(self, config={}):
         self.config = Config()
         self.page_number=1
+        
 
     def get_link(self):
         base = "https://www.linkedin.com/jobs/search/"

@@ -25,6 +25,7 @@ from state.DeletedIds import DeletedIds
 from classes.JobLinkGenerator import JobLinkGenerator
 from classes.Metrics import Metrics
 from classes.Requests import Requests
+from classes.Config import Config
 
 
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
@@ -33,11 +34,13 @@ login(driver)
 wait_for(driver, By.XPATH, '//*[@aria-label="Primary Navigation"]')
 print("Found Primary Nav bar, continuing")
 
+config = Config()
 metrics = Metrics()
 job_link_generator = JobLinkGenerator()
 job_id_state = JobIds()
 applied_ids = AppliedIds()
 deleted_ids = DeletedIds()
+
 
 print(f"Start total jobs gathered: { job_id_state.total() }")
 
@@ -67,9 +70,9 @@ while not TO_BREAK:
 
         if DO_ADD:
             job_page_url = f"https://www.linkedin.com/jobs/view/{job_id}/"
-            if not check_text(job_page_url,ignored, required, job_id):
+            if not check_text(job_page_url,config.ignored, config.required, job_id):
                 continue
-            job_id_state.add(job_id, job_link_generator.keywords)
+            job_id_state.add(job_id, config.keywords)
             print(f"{job_id} added successfully")
 
 
