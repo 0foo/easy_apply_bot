@@ -1,4 +1,10 @@
 {
-    "username": "",
-    "password": ""
+    "username": "your_linked_in_username",
+    "password": "your_linked_in_password",
+    "keywords": "keywords for the job search",
+    "required": "required in the job description",
+    "ignored":"ignored in the job description, Jobot, Robert Half, Tanisha, Cybercoders, Machine Learning, tata",
+    "location" : "location in the job description",
+    "time_frame_seconds":"time in seconds",
+    "proxy": "a proxy server"
 }
