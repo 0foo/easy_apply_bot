@@ -17,6 +17,8 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium import webdriver
+from selenium.webdriver.support.ui import WebDriverWait
+
 
 from nav.main_nav import login, wait_for, scroll_scrollbar, get_job_ids, check_text
 from state.JobIds import JobIds
@@ -29,6 +31,13 @@ from classes.Config import Config
 
 
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+
+# Wait for the page to be fully loaded
+WebDriverWait(driver, 10).until(
+    lambda d: d.execute_script('return document.readyState') == 'complete'
+)
+
+
 login(driver)
 
 wait_for(driver, By.XPATH, '//*[@aria-label="Primary Navigation"]')
@@ -58,14 +67,14 @@ while not TO_BREAK:
     # iterate job ids and look for duplicates
     PAGE_DUPLICATE_COUNT = 0
     for job_id in page_job_ids:
-        if job_id_state.exists(job_id, job_link_generator.keywords):
+        if job_id_state.exists(job_id, config.keywords):
             PAGE_DUPLICATE_COUNT += 1
     DUPLICATES_ON_PAGE = len(page_job_ids) - len(set(page_job_ids))
 
     # add job ides to the total_job set
     for job_id in page_job_ids:
         DO_ADD=True
-        if deleted_ids.item_exists(job_id) or job_id_state.item_exists(job_id) or deleted_ids.item_exists(job_id):
+        if deleted_ids.exists(job_id, config.keywords) or job_id_state.exists(job_id,config.keywords) or applied_ids.item_exists(job_id):
             DO_ADD=False
 
         if DO_ADD:
@@ -91,7 +100,7 @@ while not TO_BREAK:
             f"{metrics.duplicate_break_count}/{metrics.duplicate_break_number}"
     ))
     print(f"total_ids: {job_id_state.total()}")
-    print(f"Keywords: {job_link_generator.keywords}")
+    print(f"Keywords: {config.keywords}")
 
     # increment page_number, actually a job number but whatever
     job_link_generator.page_number += 12

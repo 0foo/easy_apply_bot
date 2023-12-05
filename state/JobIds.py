@@ -32,8 +32,11 @@ class JobIds:
             return False
         return True
 
-    def delete(self, job_id):
+    def delete_item(self, job_id):
         self.con.execute(f"DELETE FROM JobIds WHERE job_id = {job_id};")
+
+    def delete(self, job_id, search_term):
+        self.con.execute(f"DELETE FROM JobIds WHERE job_id = {job_id} and search_term = '{search_term}';")
     
     def purge(self):
         self.con.execute(f"DELETE from JobIds")

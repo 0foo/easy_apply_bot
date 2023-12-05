@@ -15,7 +15,9 @@ class DeletedIds:
             """
                 CREATE TABLE DeletedIds (
                     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                    deleted_id INTEGER UNIQUE 
+                    deleted_id INTEGER,
+                    search_term TEXT,
+                    UNIQUE(deleted_id, search_term)
                 );
             """
         )
@@ -26,9 +28,9 @@ class DeletedIds:
     def fetch_all(self):
         return self.con.fetch_col_as_list(0, "SELECT deleted_id from DeletedIds")
 
-    def add(self, deleted_id):
+    def add(self, deleted_id, search_term):
         try:
-            self.con.execute(f"INSERT INTO DeletedIds (deleted_id) VALUES ({deleted_id})")
+            self.con.execute(f"INSERT INTO DeletedIds (deleted_id, search_term) VALUES ({deleted_id}, '{search_term}')")
         except:
             return False
         return True
@@ -39,5 +41,9 @@ class DeletedIds:
     def total(self):
         return self.con.row_count("DeletedIds")
     
-    def item_exists(self, deleted_id):
+    def item_exists(self, deleted_id,):
         return self.con.item_exists(f"SELECT COUNT(*) FROM DeletedIds WHERE deleted_id = {deleted_id}")
+    
+    def exists(self, deleted_id, search_term):
+        return self.con.item_exists(f"SELECT COUNT(*) FROM DeletedIds WHERE deleted_id='{deleted_id}' AND search_term='{search_term}'")
+   

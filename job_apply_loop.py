@@ -20,7 +20,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 import pdb
 from classes.FormManager import FormItemFactory, FormItem, SelectItem, InputItem, FieldSetItem
 from classes.Config import Config
-from nav.main_nav import wait_for, login, get_config
+from nav.main_nav import wait_for, login
 from nav import apply_nav
 from time import sleep
 from state.JobIds import JobIds
@@ -39,11 +39,18 @@ applied_ids = AppliedIds()
 deleted_ids = DeletedIds()
 
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+
+# Wait for the page to be fully loaded
+WebDriverWait(driver, 10).until(
+    lambda d: d.execute_script('return document.readyState') == 'complete'
+)
+
 login(driver)
 
 
 for job_id in job_ids.get_by_keyword(keywords):
-    if deleted_ids.item_exists(job_id):
+    if deleted_ids.exists(job_id, keywords):
+        print("Already processed")
         continue
 
     print(job_id)
@@ -51,8 +58,8 @@ for job_id in job_ids.get_by_keyword(keywords):
     if not job_id:
         continue
 
-    job_ids.delete(job_id)
-    deleted_ids.add(job_id)
+    job_ids.delete(job_id, keywords)
+    deleted_ids.add(job_id,keywords)
 
     the_l = len(job_ids.get_by_keyword(keywords))
     print(f"Jobs left in keyword(s): {keywords} set: {the_l}")
@@ -66,7 +73,18 @@ for job_id in job_ids.get_by_keyword(keywords):
     TO_CONT=False
     try:
         wait_for(driver, By.CLASS_NAME, "job-view-layout")
+        wait_for(driver, By.CSS_SELECTOR, f'button[aria-label="Click to see more description"]')
         apply_nav.click_expand_job_description(driver)
+        wait_for(driver, By.CSS_SELECTOR, f'button[aria-label="Click to see less description"]', sleep_time=1, max_check=1)
+
+        for i in range(5):
+            try:
+                apply_nav.click_expand_job_description(driver)
+                wait_for(driver, By.CSS_SELECTOR, f'button[aria-label="Click to see less description"]', sleep_time=1, max_check=1)
+            except:
+                continue
+            
+
         job_text = driver.find_element(By.CLASS_NAME, "job-view-layout").text
         for req in required:
             if req.lower() not in job_text.lower():

@@ -1,5 +1,5 @@
 from selenium.webdriver.common.by import By
-from .main_nav import find_by_aria_label_attribute
+from .main_nav import find_by_aria_label_attribute, wait_for
 
 """
 This is navigation for the easy apply page.
@@ -16,6 +16,8 @@ def find_by_button_aria_label_attribute(driver, aria_label):
         return button
     except:
         return False
+    
+
 def uncheck_follow_company(driver):
     # Find the checkbox by its id
     try:
@@ -27,9 +29,9 @@ def uncheck_follow_company(driver):
         return False
 
 def click_expand_job_description(driver):
-    expand_button = driver.find_element(By.CLASS_NAME, "jobs-description__footer-button")
-        # Check if the checkbox is selected and click to uncheck it
-    driver.execute_script("arguments[0].click();", expand_button)
+    button = driver.find_element(By.CSS_SELECTOR, f'button[aria-label="Click to see more description"]')
+    button.click()
+    # driver.execute_script("arguments[0].click();", button)
 
 
 def submit_button_present(driver):
