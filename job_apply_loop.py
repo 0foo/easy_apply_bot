@@ -53,6 +53,7 @@ for job_id in job_ids.get_by_keyword(keywords):
         print("Already processed")
         continue
 
+    print("----------------------------------")
     print(job_id)
     print(f"https://www.linkedin.com/jobs/view/{job_id}/")
     if not job_id:
@@ -108,6 +109,7 @@ for job_id in job_ids.get_by_keyword(keywords):
         continue
     sleep(2)
     # click easy apply button
+    print(f"Found a matching job {job_id}")
     for i in range(0, 5):
         button = driver.find_element(By.XPATH, "//button[contains(@aria-label, 'Easy Apply')]")
         driver.execute_script("arguments[0].click();", button)
