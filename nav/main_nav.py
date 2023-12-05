@@ -12,11 +12,6 @@ sys.path.append(parent_directory)
 my_requests = Requests()
 
 
-def get_config(config_file):
-    data={}
-    with open(config_file) as f:
-        data = json.loads(f.read())
-    return data
 
 """
 This is navigation for main parts of the site.

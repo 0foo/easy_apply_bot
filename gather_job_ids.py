@@ -18,7 +18,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium import webdriver
 
-from nav.main_nav import login, wait_for, scroll_scrollbar, get_job_ids, check_text, get_config
+from nav.main_nav import login, wait_for, scroll_scrollbar, get_job_ids, check_text
 from state.JobIds import JobIds
 from state.AppliedIds import AppliedIds
 from state.DeletedIds import DeletedIds
@@ -26,13 +26,6 @@ from classes.JobLinkGenerator import JobLinkGenerator
 from classes.Metrics import Metrics
 from classes.Requests import Requests
 
-config_file="./config.json"
-config = get_config(config_file)
-required=config["required"].split(",")
-ignored=config["ignored"].split(",")
-
-required=required.split(",")
-ignored=ignored.split(",")
 
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 login(driver)
@@ -41,7 +34,7 @@ wait_for(driver, By.XPATH, '//*[@aria-label="Primary Navigation"]')
 print("Found Primary Nav bar, continuing")
 
 metrics = Metrics()
-job_link_generator = JobLinkGenerator(config)
+job_link_generator = JobLinkGenerator()
 job_id_state = JobIds()
 applied_ids = AppliedIds()
 deleted_ids = DeletedIds()

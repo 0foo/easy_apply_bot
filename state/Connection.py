@@ -7,9 +7,9 @@ Sqllite3 right now but will abstract out at some point
 """
 
 class Connection:
-    con = None
 
     def __init__(self, db_path):
+        self.con = None
         self.con = sqlite3.connect(db_path)
     
     def __del__(self):

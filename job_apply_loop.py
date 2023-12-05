@@ -19,6 +19,7 @@ from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 import pdb
 from classes.FormManager import FormItemFactory, FormItem, SelectItem, InputItem, FieldSetItem
+from classes.Config import Config
 from nav.main_nav import wait_for, login, get_config
 from nav import apply_nav
 from time import sleep
@@ -27,24 +28,21 @@ from state.AppliedIds import AppliedIds
 from state.DeletedIds import DeletedIds
 
 
-config_file="./config.json"
-config = get_config(config_file)
-required=config["required"].split(",")
-ignored=config["ignored"].split(",")
-keyword=config["keyword"]
+config= Config()
+required=config.required
+ignored=config.ignored
+keywords=config.keywords
 
 
 job_ids = JobIds()
 applied_ids = AppliedIds()
 deleted_ids = DeletedIds()
 
-
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 login(driver)
 
 
-
-for job_id in job_ids.get_by_keyword(keyword):
+for job_id in job_ids.get_by_keyword(keywords):
     if deleted_ids.item_exists(job_id):
         continue
 
@@ -56,8 +54,8 @@ for job_id in job_ids.get_by_keyword(keyword):
     job_ids.delete(job_id)
     deleted_ids.add(job_id)
 
-    the_l = len(job_ids.get_by_keyword(keyword))
-    print(f"Jobs left in keyword(s): {keyword} set: {the_l}")
+    the_l = len(job_ids.get_by_keyword(keywords))
+    print(f"Jobs left in keyword(s): {keywords} set: {the_l}")
 
     driver.refresh()
     apply_nav.get_job_page(driver, job_id)

@@ -1,17 +1,23 @@
 import requests, pdb
 from time import sleep
+from classes.Config import Config
 
 
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36'
 }
 
-proxies = {
-    "http": "http://K79mqcSCbl4916cR:KwZmVYqv6Qd6GlmP@geo.iproyal.com:12321"
-}
 
 
 class Requests:
+
+    def __init__(self):
+        
+        config = Config()
+
+        self.proxies = {
+            "http": f"{config.proxy}"
+        }
 
 
     def get(self, page_url):
@@ -29,7 +35,7 @@ class Requests:
             for i in range(10):
                 print(i)
                 sleep(10)
-                response = requests.get(page_url, headers=headers, proxies=proxies)
+                response = requests.get(page_url, headers=headers, proxies=self.proxies)
                 if response.status_code  == 200:
                     break
 

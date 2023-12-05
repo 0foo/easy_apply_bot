@@ -6,7 +6,9 @@ class AppliedIds:
     easy_db='./easy_apply.db'
 
     def __init__(self):
-        self.con = Connection(self.easy_db)
+        if not self.con:    
+            self.con = Connection(self.easy_db)
+            
         if not self.con.table_exists("AppliedIds"):
             self.create_applied_ids_table()
 
