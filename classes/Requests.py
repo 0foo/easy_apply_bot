@@ -14,27 +14,24 @@ class Requests:
         
         config = Config()
 
-        self.proxies = {
-            "http": f"{config.proxy}"
-        }
+        self.proxies = None
+        if config.proxy:
+            self.proxies = {
+                "http": f"{config.proxy}"
+            }
 
 
     def get(self, page_url):
 
-        # try normally
-        # response = requests.get(page_url, headers=headers)
+        response = self.req(page_url)
 
-        # try with proxy
-        # if response.status_code  != 200:
-        response = requests.get(page_url, headers=headers, proxies=proxies)
-        
-        # try with proxy and back off
+        # try with back off
         if response.status_code  != 200:
             print("Request failed {response.status_code}. Trying 10 sets of 10 second backoff.")
             for i in range(10):
                 print(i)
                 sleep(10)
-                response = requests.get(page_url, headers=headers, proxies=self.proxies)
+                response = self.req(page_url)
                 if response.status_code  == 200:
                     break
 
@@ -45,3 +42,11 @@ class Requests:
             raise Exception("Can' get a successful request")
         
         return response
+    
+    def req(self, page_url):
+        if self.proxies:
+            return requests.get(page_url, headers=headers, proxies=self.proxies)
+        else:
+            return equests.get(page_url, headers=headers)
+
+        
