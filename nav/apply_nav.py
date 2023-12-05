@@ -26,6 +26,12 @@ def uncheck_follow_company(driver):
     except:
         return False
 
+def click_expand_job_description(driver):
+    expand_button = driver.find_element(By.CLASS_NAME, "jobs-description__footer-button")
+        # Check if the checkbox is selected and click to uncheck it
+    driver.execute_script("arguments[0].click();", expand_button)
+
+
 def submit_button_present(driver):
     if find_by_button_aria_label_attribute(driver, "Submit application"):
         return True

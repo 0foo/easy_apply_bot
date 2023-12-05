@@ -2,51 +2,71 @@
 Searches a linkedin site for jobids matching a keyword(s).
 Input your keyword(s) into keyword variable and run this: python3 gather_job_ids.py.
 """
-keyword="linux"
+
+
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36'
+}
+
+proxies = {
+    "http": "http://10.10.1.10:3128"
+}
 
 import sys
+import pdb
+import requests
+from bs4 import BeautifulSoup
+import re
+
+sys.path.append("./state")
+sys.path.append("./classes")
+sys.path.append("./nav")
 
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium import webdriver
 
-from nav.main_nav import login, wait_for, scroll_scrollbar, get_job_ids
+from nav.main_nav import login, wait_for, scroll_scrollbar, get_job_ids, check_text, get_config
 from state.JobIds import JobIds
+from state.AppliedIds import AppliedIds
+from state.DeletedIds import DeletedIds
 from classes.JobLinkGenerator import JobLinkGenerator
 from classes.Metrics import Metrics
+from classes.Requests import Requests
 
-sys.path.append("./state")
-sys.path.append("./classes")
-sys.path.append("./nav")
+config_file="./config.json"
+config = get_config(config_file)
+required=config["required"].split(",")
+ignored=config["ignored"].split(",")
+keyword=config["keyword"]
+
+required=required.split(",")
+ignored=ignored.split(",")
 
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 login(driver)
 
-# wait in case security question
 wait_for(driver, By.XPATH, '//*[@aria-label="Primary Navigation"]')
 print("Found Primary Nav bar, continuing")
 
-
-# metric manager
 metrics = Metrics()
-# job link manager
 job_link_generator = JobLinkGenerator()
 job_link_generator.keywords = keyword
-# job id manager
 job_id_state = JobIds()
+applied_ids = AppliedIds()
+deleted_ids = DeletedIds()
 
 print(f"Start total jobs gathered: { job_id_state.total() }")
 
 TO_BREAK = False
 while not TO_BREAK:
-    # pdb.set_trace()
-    # go to the job page
     jobs_page = job_link_generator.get_link()
     print(jobs_page)
     driver.get(jobs_page)
+    
+    # pdb.set_trace()
     scroll_scrollbar(driver)
-    # get all the job ids from the page
     html_text = driver.page_source
     page_job_ids = get_job_ids(html_text)
 
@@ -59,7 +79,17 @@ while not TO_BREAK:
 
     # add job ides to the total_job set
     for job_id in page_job_ids:
-        job_id_state.add(job_id, job_link_generator.keywords)
+        DO_ADD=True
+        if deleted_ids.item_exists(job_id) or job_id_state.item_exists(job_id) or deleted_ids.item_exists(job_id):
+            DO_ADD=False
+
+        if DO_ADD:
+            job_page_url = f"https://www.linkedin.com/jobs/view/{job_id}/"
+            if not check_text(job_page_url,ignored, required, job_id):
+                continue
+            job_id_state.add(job_id, job_link_generator.keywords)
+            print(f"{job_id} added successfully")
+
 
     # check if every job id on the page is a duplicate (means we've hit the
     # end of the search)

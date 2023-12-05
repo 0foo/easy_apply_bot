@@ -34,6 +34,10 @@ class JobIds:
 
     def delete(self, job_id):
         self.con.execute(f"DELETE FROM JobIds WHERE job_id = {job_id};")
+    
+    def purge(self):
+        self.con.execute(f"DELETE from JobIds")
+        self.con.execute(f"DELETE FROM sqlite_sequence WHERE name='JobIds';")
 
     def total(self):
         return self.con.row_count("JobIds")
@@ -46,3 +50,6 @@ class JobIds:
         if job_ids:
             return job_ids
         return []
+    
+    def item_exists(self, job_id):
+        return self.con.item_exists(f"SELECT COUNT(*) FROM JobIds WHERE job_id = {job_id}")

@@ -1,5 +1,4 @@
-keyword="linux"
-
+import json
 import sys
 sys.path.append('./state')
 sys.path.append('./classes')
@@ -16,18 +15,29 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 import pdb
 from classes.FormManager import FormItemFactory, FormItem, SelectItem, InputItem, FieldSetItem
-from nav.main_nav import wait_for, login
+from nav.main_nav import wait_for, login, get_config
 from nav import apply_nav
 from time import sleep
 from state.JobIds import JobIds
 from state.AppliedIds import AppliedIds
+from state.DeletedIds import DeletedIds
+
+
+config_file="./config.json"
+config = get_config(config_file)
+required=config["required"].split(",")
+ignored=config["ignored"].split(",")
+keyword=config["keyword"]
 
 
 job_ids = JobIds()
 applied_ids = AppliedIds()
+deleted_ids = DeletedIds()
+
 
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 login(driver)
@@ -35,15 +45,45 @@ login(driver)
 
 
 for job_id in job_ids.get_by_keyword(keyword):
-    
+    if deleted_ids.item_exists(job_id):
+        continue
+
     print(job_id)
+    print(f"https://www.linkedin.com/jobs/view/{job_id}/")
     if not job_id:
         continue
 
     job_ids.delete(job_id)
+    deleted_ids.add(job_id)
+
+    the_l = len(job_ids.get_by_keyword(keyword))
+    print(f"Jobs left in keyword(s): {keyword} set: {the_l}")
 
     driver.refresh()
     apply_nav.get_job_page(driver, job_id)
+
+
+
+    # text search
+    TO_CONT=False
+    try:
+        wait_for(driver, By.CLASS_NAME, "job-view-layout")
+        apply_nav.click_expand_job_description(driver)
+        job_text = driver.find_element(By.CLASS_NAME, "job-view-layout").text
+        for req in required:
+            if req.lower() not in job_text.lower():
+                print(f"{req} not in job text, ignoring")
+                TO_CONT=True
+        for ign in ignored:
+            if ign.lower() in job_text.lower():
+                print(f"{ign} present in job text, ignoring")
+                TO_CONT=True
+    except:
+        pdb.set_trace()
+
+    if TO_CONT:
+        sleep(4)
+        continue
 
     # wait for easy apply button and click
     try:

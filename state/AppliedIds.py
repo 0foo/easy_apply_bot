@@ -37,7 +37,7 @@ class AppliedIds:
         self.con.execute(f"DELETE FROM AppliedIds WHERE applied_id = {applied_id};")
 
     def total(self):
-        return self.con.get_row_count(self.easy_db, "AppliedIds")
+        return self.con.row_count("AppliedIds")
     
     def item_exists(self, applied_id):
         return self.con.item_exists(f"SELECT COUNT(*) FROM AppliedIds WHERE applied_id = {applied_id}")

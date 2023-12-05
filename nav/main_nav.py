@@ -1,13 +1,22 @@
 from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
 from time import sleep
-import os,sys,json
+import os,sys,json, requests, re, pdb, json
+from classes.Requests import Requests
+
 
 # Get the path to the directory above the current script's directory
 current_script_directory = os.path.dirname(__file__)
 parent_directory = os.path.dirname(current_script_directory)
 sys.path.append(parent_directory)
+my_requests = Requests()
 
+
+def get_config(config_file):
+    data={}
+    with open(config_file) as f:
+        data = json.loads(f.read())
+    return data
 
 """
 This is navigation for main parts of the site.
@@ -98,4 +107,28 @@ def wait_for(driver, search_type, selector_string, sleep_time=5, max_check=50):
             print(f"Wait_for exceeded max check count: {max_check}. Exception thrown.")
             raise Exception("Exceed max wait time.")
         sleep(sleep_time)
+
+
+def check_text(job_page_url, ignored, required, job_id):
+    print(f"Checking {job_page_url} for required/ignored keywords.")
+    try:
+        parent_text = my_requests.get(job_page_url).text
+    except:
+        raise("check_text method not working!!")
+
+    soup = BeautifulSoup(parent_text, 'html.parser')
+    the_text = soup.find(class_="details").text.replace("\n", " ")
+    job_text = re.sub(r"\s+" ," ", the_text)
+
+    for req in required:
+        if req.lower() not in job_text.lower():
+            print(f"{req} not in job text, ignoring {job_id}")
+            return False
+        
+    for ign in ignored:
+        if ign.lower() in job_text.lower():
+            print(f"{ign} present in job text, ignoring {job_id}")
+            return False
+        
+    return True
 
