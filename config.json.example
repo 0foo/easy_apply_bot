@@ -6,5 +6,5 @@
     "ignored":"ignored in the job description, Jobot, Robert Half, Tanisha, Cybercoders, Machine Learning, tata",
     "location" : "location in the job description",
     "time_frame_seconds":"time in seconds",
-    "proxy": "a proxy server"
+    "proxy": "a proxy server, not required"
 }
