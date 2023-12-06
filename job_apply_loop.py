@@ -95,7 +95,8 @@ for job_id in job_ids.get_by_keyword(keywords):
             if ign.lower() in job_text.lower():
                 print(f"{ign} present in job text, ignoring")
                 TO_CONT=True
-    except:
+    except Exception as e:
+        print(e)
         pdb.set_trace()
 
     if TO_CONT:

@@ -32,16 +32,7 @@ from classes.Config import Config
 
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 
-# Wait for the page to be fully loaded
-WebDriverWait(driver, 10).until(
-    lambda d: d.execute_script('return document.readyState') == 'complete'
-)
 
-
-login(driver)
-
-wait_for(driver, By.XPATH, '//*[@aria-label="Primary Navigation"]')
-print("Found Primary Nav bar, continuing")
 
 config = Config()
 metrics = Metrics()
@@ -50,14 +41,28 @@ job_id_state = JobIds()
 applied_ids = AppliedIds()
 deleted_ids = DeletedIds()
 
+login(driver)
 
-print(f"Start total jobs gathered: { job_id_state.total() }")
+# Wait for the page to be fully loaded
+WebDriverWait(driver, 10).until(
+    lambda d: d.execute_script('return document.readyState') == 'complete'
+)
+
+wait_for(driver, By.XPATH, '//*[@aria-label="Primary Navigation"]')
+print("Found Primary Nav bar, continuing")
+
+print(f"Start total jobs gathered: { job_id_state.total(config.keywords) }")
 
 TO_BREAK = False
 while not TO_BREAK:
     jobs_page = job_link_generator.get_link()
     print(jobs_page)
     driver.get(jobs_page)
+    
+    # Wait for the page to be fully loaded
+    WebDriverWait(driver, 10).until(
+        lambda d: d.execute_script('return document.readyState') == 'complete'
+    )
     
     # pdb.set_trace()
     scroll_scrollbar(driver)
@@ -99,7 +104,7 @@ while not TO_BREAK:
             "full page duplicate break count/duplicate break number" +
             f"{metrics.duplicate_break_count}/{metrics.duplicate_break_number}"
     ))
-    print(f"total_ids: {job_id_state.total()}")
+    print(f"total_ids: {job_id_state.total(config.keywords)}")
     print(f"Keywords: {config.keywords}")
 
     # increment page_number, actually a job number but whatever
@@ -125,4 +130,4 @@ while not TO_BREAK:
     #     TO_BREAK = True
 
 driver.quit()
-print(f"End total jobs gathered: {job_id_state.total()}")
+print(f"End total jobs gathered: {job_id_state.total(config.keywords)}")

@@ -42,7 +42,10 @@ class JobIds:
         self.con.execute(f"DELETE from JobIds")
         self.con.execute(f"DELETE FROM sqlite_sequence WHERE name='JobIds';")
 
-    def total(self):
+    def total(self, search_term):
+        return self.con.fetch_col_as_list(0, f"SELECT COUNT(*) FROM JobIds WHERE  search_term='{search_term}'")
+    
+    def total_items(self):
         return self.con.row_count("JobIds")
     
     def exists(self, job_id, search_term):
